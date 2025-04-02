@@ -126,7 +126,12 @@ try {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="boot.css" />
     <link rel="stylesheet" href="style.css" />
-    <script src="https://secure.mlstatic.com/sdk/javascript/v1/mercadopago.js"></script>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mp = new MercadoPago('<?php echo $config['mp_public_key']; ?>');
+        });
+    </script>
 </head>
 
 <body>
@@ -164,12 +169,11 @@ try {
                         <div class="box-one">
                             <label>Ano</label>
                             <input type="text" id="cardExpirationYear" name="cardExpirationYear" placeholder="AA"
-                                maxlength="2" data-checkout="cardExpirationYear" required
-                                onkeydown="handleValidate(event)">
+                                maxlength="2" data-checkout="cardExpirationYear" required>
                         </div>
                         <div class="box-two">
                             <label>
-                                CVV
+                                C V V
                                 <span class="icon" title="Ajuda">
                                     <img src="../assets/help.svg" />
                                 </span>
@@ -217,9 +221,7 @@ try {
                                     <div id="card-user-number" class="number-card">•••• •••• •••• ••••</div>
                                     <div class="name-and-date">
                                         <div id="card-user-name" class="name">Nome do Titular</div>
-                                        <div id="card-user-date" class="date">
-                                            <?php echo str_pad($_POST['cardExpirationMonth'] ?? '• •', 2, '0', STR_PAD_LEFT) . ' / ' . ($_POST['cardExpirationYear'] ?? '• •'); ?>
-                                        </div>
+                                        <div id="card-user-date" class="date">MM/AA</div>
                                     </div>
                                 </div>
                             </div>

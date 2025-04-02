@@ -16,6 +16,8 @@ const cardViewName = document.querySelector('#card-user-name');
 const cardViewNumber = document.querySelector('#card-user-number');
 const cardViewCvv = document.querySelector('#card-user-cvv');
 const cardViewDate = document.querySelector('#card-user-date');
+const inputMonth = document.querySelector('#cardExpirationMonth');
+const inputYear = document.querySelector('#cardExpirationYear');
 
 
 inputNumber.onblur = (e) => {
@@ -153,18 +155,64 @@ const handleCvv = (e) => {
 
 }
 
-const handleValidate = (e) => {
+// Adicionar validações de cartão antes das funções existentes
+const validations = {
+	isValidCardNumber: (number) => {
+		return /^[0-9]{16}$/.test(number.replace(/\s/g, ''));
+	},
+	isValidExpiryMonth: (month) => {
+		const numMonth = parseInt(month, 10);
+		return numMonth >= 1 && numMonth <= 12;
+	},
+	isValidExpiryYear: (year) => {
+		const currentYear = new Date().getFullYear() % 100;
+		const numYear = parseInt(year, 10);
+		return numYear >= currentYear && numYear <= currentYear + 10;
+	},
+	isValidCVV: (cvv) => {
+		return /^[0-9]{3,4}$/.test(cvv);
+	}
+};
 
-	setTimeout(() => {
+// Modificar função updateExpirationDate para incluir validação
+const updateExpirationDate = () => {
+	try {
+		const month = inputMonth.value.padStart(2, '0');
+		const year = inputYear.value.padStart(2, '0');
 
-		const value = e.target.value
+		if (!validations.isValidExpiryMonth(month)) {
+			alert('Mês inválido (1-12)');
+			inputMonth.value = '';
+			return;
+		}
+		if (!validations.isValidExpiryYear(year)) {
+			alert('Ano inválido - deve ser entre o ano atual e os próximos 10 anos');
+			inputYear.value = '';
+			return;
+		}
 
-
-		cardViewDate.innerText = value
-
-	}, 0)
-
+		cardViewDate.innerText = `${month}/${year}`;
+	} catch (error) {
+		cardViewDate.innerText = 'MM/AA';
+	}
 }
+
+inputMonth.addEventListener('input', updateExpirationDate);
+inputYear.addEventListener('input', updateExpirationDate);
+
+inputMonth.addEventListener('input', (e) => {
+	let value = e.target.value.replace(/\D/g, '');
+	if (value > 12) value = '12';
+	if (value.length === 1 && value > 1) value = '0' + value;
+	e.target.value = value;
+	updateExpirationDate();
+});
+
+inputYear.addEventListener('input', (e) => {
+	let value = e.target.value.replace(/\D/g, '');
+	e.target.value = value;
+	updateExpirationDate();
+});
 
 inputCvv.onfocus = () => {
 	cardBox.classList.remove('rotate')
@@ -175,22 +223,41 @@ inputCvv.onblur = () => {
 	canSubmit();
 }
 
+// Modificar função canSubmit para não validar em campos vazios inicialmente
 function canSubmit() {
+	try {
+		const cardNumber = inputNumber.value.replace(/\s/g, '');
+		const month = inputMonth.value;
+		const year = inputYear.value;
+		const cvv = inputCvv.value;
 
-	const inputs = document.querySelectorAll('input')
-
-	for (let i = 0; i < 5; i++) {
-
-		if (inputs[i].value.length <= 0) {
-			btnSubmit.classList.add('disable')
+		// Se todos os campos estiverem vazios, não mostrar erro inicialmente
+		if (!cardNumber && !month && !year && !cvv) {
+			btnSubmit.classList.add('disable');
 			return false;
 		}
+
+		if (!validations.isValidCardNumber(cardNumber)) {
+			throw new Error('Número do cartão inválido');
+		}
+		if (!validations.isValidExpiryMonth(month)) {
+			throw new Error('Mês inválido');
+		}
+		if (!validations.isValidExpiryYear(year)) {
+			throw new Error('Ano inválido');
+		}
+		if (!validations.isValidCVV(cvv)) {
+			throw new Error('CVV inválido');
+		}
+
+		btnSubmit.classList.remove('disable');
+		return true;
+	} catch (error) {
+		alert(error.message);
+		btnSubmit.classList.add('disable');
+		return false;
 	}
-
-	btnSubmit.classList.remove('disable')
 }
-
-canSubmit()
 
 function identifyCreditCard(creditCardNumber) {
 	const cardPatterns = {
