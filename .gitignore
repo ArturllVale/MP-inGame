@@ -1,0 +1,10 @@
+# Arquivos de configuração
+config.php
+
+# Arquivos temporários
+*.log
+*.tmp
+
+# Diretórios
+/vendor/
+/node_modules/
