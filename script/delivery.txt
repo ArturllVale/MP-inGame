@@ -1,0 +1,59 @@
+
+-	script	delivery	-1,{
+	
+	OnPCLoginEvent:
+	
+	query_sql "SELECT `valor` FROM `payment_data` WHERE `user_id`='"+getcharid(3)+"'",@cashRMT;
+	if(@cashRMT >= 1 && @cashRMT <= 1000)
+	{
+		
+		query_sql "SELECT `tipo` FROM `payment_data` WHERE `user_id`='" + getcharid(3) + "'", @banco;
+		
+		if (@banco == 1) {
+			query_sql "SELECT `valor` FROM `payment_data` WHERE `user_id`='"+getcharid(3)+"'",@cashRMT;
+			query_sql "UPDATE `payment_data` SET `valor` = 0 WHERE `user_id`='"+getcharid(3)+"'";
+			query_sql "INSERT INTO `payment_data_log` (`acc_id`, `cash`, `retirado`) VALUES (" + getcharid(3) + "," + (@cashRMT * 1) + ", 0)";
+			getitem 59207,@cashRMT;
+			message strcharinfo(0),"[Sistema de Doação]: Você recebeu "+@cashRMT*1+" RMT)";
+			end;
+			
+			} else if (@banco == 0) {
+			query_sql "SELECT `valor` FROM `payment_data` WHERE `user_id`='"+getcharid(3)+"'",@cashBR;
+			query_sql "UPDATE `payment_data` SET `valor` = 0 WHERE `user_id`='"+getcharid(3)+"'";
+			query_sql "INSERT INTO `payment_data_log` (`acc_id`, `cash`, `retirado`) VALUES (" + getcharid(3) + "," + (@cashBR * 1000) + ", 0)";
+			set #CASHPOINTS, #CASHPOINTS + @cashBR*1000;
+			message strcharinfo(0),"[Sistema de Doação]: Você recebeu "+@cashBR*1000+" ROP's (Possui agora: "+#CASHPOINTS+" ROP'S)";
+			end;
+		}
+	}
+}
+
+function	script	CASH	{
+	
+	
+	query_sql "SELECT `valor` FROM `payment_data` WHERE `user_id`='"+getcharid(3)+"'",@cashBR;
+	if(@cashBR >= 1 && @cashBR <= 1000)
+	{
+		query_sql "UPDATE `payment_data` SET `valor` = 0 WHERE `user_id`='"+getcharid(3)+"'";
+		query_sql "INSERT INTO `payment_data_log` (`acc_id`, `cash`, `retirado`) VALUES (" + getcharid(3) + "," + (@cashBR * 1000) + ", 0)";
+		set #CASHPOINTS, #CASHPOINTS + @cashBR*1000;
+		message strcharinfo(0),"[Sistema de Doação]: Você recebeu "+@cashBR*1000+" ROP's (Possui agora: "+#CASHPOINTS+" ROP'S)";
+		end;
+		
+	}	
+}
+
+
+function	script	RMT	{
+	
+	query_sql "SELECT `valor` FROM `payment_data` WHERE `user_id`='"+getcharid(3)+"'",@cashRMT;
+	if(@cashRMT >= 1 && @cashRMT <= 1000)
+	{	
+		query_sql "SELECT `valor` FROM `payment_data` WHERE `user_id`='"+getcharid(3)+"'",@cashRMT;
+		query_sql "UPDATE `payment_data` SET `valor` = 0 WHERE `user_id`='"+getcharid(3)+"'";
+		query_sql "INSERT INTO `payment_data_log` (`acc_id`, `cash`, `retirado`) VALUES (" + getcharid(3) + "," + (@cashRMT * 1) + ", 0)";
+		getitem 59207,@cashRMT;
+		message strcharinfo(0),"[Sistema de Doação]: Você recebeu "+@cashRMT*1+" RMT)";
+		end;
+	}
+}

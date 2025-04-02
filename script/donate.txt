@@ -1,0 +1,106 @@
+prontera,144,182,5	script	Doação#Donation	113,{
+	
+	mes "Olá, selecione uma das opções.";
+	
+	switch(select("^006400[>>]^000000 Doação Cash:^008080[>>]^000000 Doação RMT:^FF0000[>>]^000000 Sair")){
+		
+		case 1:
+		switch(select("^006400[>>]^000000 Pix MercadoPago:^008080[>>]^000000 Cartão de Crédito:^FF0000[>>]^000000 Sair")){
+			
+			case 1:
+			mes "Insira o valor da doação:";
+			input .@valor;
+			if (.@valor < 1) { mes "Valor inválido!"; close; }
+			clear;
+			mes "Confirme o valor:";
+			mes "Valor: " + .@valor;
+			if (select("- Sim:- Não") == 2) { close; }
+			
+			next;
+			
+			set .@user_id, getcharid(3);
+			
+			mes "Obrigado por ajudar o Servidor, efetue o pagamento e aguarde a aprovação.";
+			mes "Escaneie o ^006400QRCode Pix^000000 com seu APP.";
+			mes "<URL>Ver QRCode<INFO>http://www.seusite.com/mp/api/pix.php?vl=" + .@valor + "&user_id=" + .@user_id + "&tipo=" + 0 + "</INFO></URL>";
+			close2;
+			callfunc "CASH";
+			end;
+			
+			case 2:
+			mes "Insira o valor da doação:";
+			input .@valor;
+			if (.@valor < 1) { mes "Valor inválido!"; close; }
+			clear;
+			mes "Confirme o valor:";
+			mes "Valor: " + .@valor;
+			if (select("- Sim:- Não") == 2) { close; }
+			
+			next;
+			
+			set .@user_id, getcharid(3);
+			
+			mes "Obrigado por ajudar o Servidor, efetue o pagamento e aguarde a aprovação.";
+			mes "Use o ^008080Cartão MercadoPago^000000 para efetuar o pagamento.";
+			mes "<URL>Preencher Dados<INFO>http://www.seusite.com/mp/api/card.php?vl=" + .@valor + "&user_id=" + .@user_id + "&tipo=" + 2 + "</INFO></URL>";
+			close2;
+			callfunc "CASH";
+			end;
+			
+			case 3:
+			close;
+		}
+		
+		case 2:
+		switch(select("^006400[>>]^000000 Pix MercadoPago:^008080[>>]^000000 Cartão MercadoPago:^FF0000[>>]^000000 Sair")){
+			
+			case 1:
+			next;
+			mes "Insira o valor da doação:";
+			input .@valor;
+			if (.@valor < 1) { mes "Valor inválido!"; close; }
+			clear;
+			mes "Confirme o valor:";
+			mes "Valor: " + .@valor;
+			
+			if (select("- Sim:- Não") == 2) { close; }
+			
+			next;
+			set .@user_id, getcharid(3);
+			
+			mes "Obrigado por ajudar o Servidor, efetue o pagamento e aguarde a aprovação.";
+			mes "Escaneie o ^006400QRCode Pix^000000 com seu APP.";
+			mes "<URL>Ver QRCode<INFO>http://www.seusite.com/mp/pix.php?vl=" + .@valor + "&user_id=" + .@user_id + "&tipo=" + 1 + "</INFO></URL>";
+			close2;
+			callfunc "RMT";
+			end;
+			
+			case 2:
+			mes "Insira o valor da doação:";
+			input .@valor;
+			if (.@valor < 1) { mes "Valor inválido!"; close; }
+			clear;
+			mes "Confirme o valor:";
+			mes "Valor: " + .@valor;
+			if (select("- Sim:- Não") == 2) { close; }
+			
+			next;
+			
+			set .@user_id, getcharid(3);
+			
+			mes "Obrigado por ajudar o Servidor, efetue o pagamento e aguarde a aprovação.";
+			mes "Use o ^008080Cartão MercadoPago^000000 para efetuar o pagamento.";
+			mes "<URL>Preencher Dados<INFO>http://www.seusite.com/mp/card.php?vl=" + .@valor + "&user_id=" + .@user_id + "&tipo=" + 3 + "</INFO></URL>";
+			close2;
+			callfunc "RMT";
+			end;
+			
+			case 3:
+			close;
+		}
+		
+		case 3:
+		close;
+	}
+	
+}
