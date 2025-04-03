@@ -207,24 +207,18 @@ const validations = {
 	}
 };
 
-// Modificar função updateExpirationDate para incluir validação
+// Modificar função updateExpirationDate para incluir validação sem alertas imediatos
 const updateExpirationDate = () => {
 	try {
 		const month = inputMonth.value.padStart(2, '0');
 		const year = inputYear.value.padStart(2, '0');
 
-		if (!validations.isValidExpiryMonth(month)) {
-			alert('Mês inválido (1-12)');
-			inputMonth.value = '';
-			return;
+		// Atualizar a visualização do cartão sem mostrar alertas
+		if (month || year) {
+			cardViewDate.innerText = `${month}/${year}`;
+		} else {
+			cardViewDate.innerText = 'MM/AA';
 		}
-		if (!validations.isValidExpiryYear(year)) {
-			alert('Ano inválido - deve ser entre o ano atual e os próximos 10 anos');
-			inputYear.value = '';
-			return;
-		}
-
-		cardViewDate.innerText = `${month}/${year}`;
 	} catch (error) {
 		cardViewDate.innerText = 'MM/AA';
 	}
