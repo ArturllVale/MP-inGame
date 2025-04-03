@@ -15,7 +15,7 @@ const inputValidateInfo = document.querySelector('#cardExpirationYear + .info')
 
 // Verificar se os elementos existem antes de adicionar event listeners
 if (!inputNumber || !btnSubmit) {
-  console.error('Elementos essenciais do formulário não foram encontrados');
+	console.error('Elementos essenciais do formulário não foram encontrados');
 }
 
 const cardViewName = document.querySelector('#card-user-name');
@@ -32,7 +32,7 @@ inputNumber.onblur = (e) => {
 
 
 	if (value.length <= 0) {
-		const message = "Preenchimento obrigatório!"
+		const message = "Por favor, informe o número do seu cartão."
 		// Verificar se inputNumberInfo existe antes de acessá-lo
 		if (inputNumberInfo) {
 			inputNumberInfo.querySelector('.message').innerText = message
@@ -43,7 +43,7 @@ inputNumber.onblur = (e) => {
 	}
 
 	if (!/^[0-9]{16}$/.test(valueReplace)) {
-		const message = "Use apenas números, e verifique se estão completos!"
+		const message = "O número do cartão deve conter 16 dígitos, sem espaços ou caracteres especiais."
 		// Verificar se inputNumberInfo existe antes de acessá-lo
 		if (inputNumberInfo) {
 			inputNumberInfo.querySelector('.message').innerText = message
@@ -68,7 +68,7 @@ inputName.onblur = (e) => {
 
 
 	if (value.length <= 0) {
-		const message = "Preenchimento obrigatório!"
+		const message = "Por favor, informe o nome do titular do cartão."
 		// Verificar se inputNameInfo existe antes de acessá-lo
 		if (inputNameInfo) {
 			inputNameInfo.querySelector('.message').innerText = message
@@ -79,7 +79,7 @@ inputName.onblur = (e) => {
 	}
 
 	if (!/^[a-z]+$/i.test(valueReplace)) {
-		const message = "Insira seu nome de forma correcta!"
+		const message = "O nome deve conter apenas letras, sem números ou caracteres especiais."
 		// Verificar se inputNameInfo existe antes de acessá-lo
 		if (inputNameInfo) {
 			inputNameInfo.querySelector('.message').innerText = message
@@ -103,7 +103,7 @@ inputValidate.onblur = (e) => {
 
 
 	if (value.length <= 0) {
-		const message = "Preenchimento obrigatório!"
+		const message = "Por favor, informe a data de validade do seu cartão."
 		// Verificar se inputValidateInfo existe antes de acessá-lo
 		if (inputValidateInfo) {
 			inputValidateInfo.querySelector('.message').innerText = message
@@ -114,7 +114,7 @@ inputValidate.onblur = (e) => {
 	}
 
 	if (!/^[0-9]{2}\/[0-9]{4}/i.test(valueReplace)) {
-		const message = `Use o padrão "mês/ano"`
+		const message = `Por favor, informe a data no formato "mês/ano" (exemplo: 05/2025)`
 		// Verificar se inputValidateInfo existe antes de acessá-lo
 		if (inputValidateInfo) {
 			inputValidateInfo.querySelector('.message').innerText = message
@@ -245,8 +245,39 @@ inputCvv.onfocus = () => {
 	cardBox.classList.remove('rotate')
 }
 
-inputCvv.onblur = () => {
+inputCvv.onblur = (e) => {
 	cardBox.classList.add('rotate')
+
+	const value = e.target.value;
+
+	if (value.length <= 0) {
+		const message = "Por favor, informe o código de segurança do seu cartão."
+		// Verificar se inputCvvInfo existe antes de acessá-lo
+		if (inputCvvInfo) {
+			inputCvvInfo.querySelector('.message').innerText = message
+			inputCvvInfo.classList.add('visible')
+		}
+		btnSubmit.classList.add('disable')
+		return false;
+	}
+
+	if (!/^[0-9]{3,4}$/.test(value)) {
+		const message = "O código de segurança deve ter 3 ou 4 dígitos numéricos."
+		// Verificar se inputCvvInfo existe antes de acessá-lo
+		if (inputCvvInfo) {
+			inputCvvInfo.querySelector('.message').innerText = message
+			inputCvvInfo.classList.add('visible')
+		}
+		btnSubmit.classList.add('disable')
+		return false;
+	}
+
+	// Verificar se inputCvvInfo existe antes de acessá-lo
+	if (inputCvvInfo) {
+		inputCvvInfo.querySelector('.message').innerText = ''
+		inputCvvInfo.classList.remove('visible')
+	}
+
 	canSubmit();
 }
 
@@ -257,10 +288,10 @@ inputNumber.addEventListener('input', updateCreditCardInfo);
 inputCvv.addEventListener('input', handleCvv);
 
 // Adicionar validação ao botão de submissão
-btnSubmit.addEventListener('click', function(e) {
+btnSubmit.addEventListener('click', function (e) {
 	if (!canSubmit()) {
 		e.preventDefault();
-		alert('Por favor, verifique os dados do cartão antes de continuar.');
+		alert('Por favor, verifique se todos os dados do cartão estão corretos antes de continuar.');
 	}
 });
 
@@ -335,7 +366,7 @@ function updateCreditCardInfo() {
 	}
 
 	if (bandeira !== '') {
-		imagemBandeira.style.display = 'inline'; 
+		imagemBandeira.style.display = 'inline';
 		switch (bandeira) {
 			case 'visa':
 				imagemBandeira.src = '../assets/visa.png';

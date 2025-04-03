@@ -3,7 +3,7 @@
 // Verifique se o external_reference foi recebido via GET
 if (!isset($_GET['external_reference'])) {
     http_response_code(400); // Bad Request
-    echo "external_reference não foi fornecido";
+    echo "Não foi possível verificar o status do pagamento. Informação necessária não encontrada.";
     exit;
 }
 
@@ -28,7 +28,5 @@ if ($payment_status) {
     echo $payment_status;
 } else {
     http_response_code(404); // Not Found
-    echo "Status do pagamento não encontrado para external_reference: $external_reference";
+    echo "Não foi possível encontrar informações sobre este pagamento. Por favor, verifique se o código está correto.";
 }
-
-?>

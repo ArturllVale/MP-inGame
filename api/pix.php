@@ -10,13 +10,13 @@ $user_id = $_GET['user_id'] ?? null;
 $tipo = $_GET['tipo'] ?? null;
 
 if (!isset($amount) || empty($amount) || !is_numeric($amount) || $amount < $config['min_donation'] || $amount > $config['max_donation']) {
-    die("O valor deve ser entre {$config['min_donation']} e {$config['max_donation']}, e não pode ser vazio.");
+    die("O valor da doação deve estar entre R$ {$config['min_donation']} e R$ {$config['max_donation']}. Por favor, verifique o valor informado e tente novamente.");
 }
 if (!$user_id || !is_numeric($user_id)) {
-    die('user_id inválido');
+    die('Não foi possível identificar seu usuário. Por favor, faça login novamente e tente realizar a doação.');
 }
 if ($tipo === null || ($tipo != 0 && $tipo != 1)) {
-    die('tipo inválido');
+    die('O tipo de pagamento selecionado é inválido. Por favor, selecione uma opção válida e tente novamente.');
 }
 
 
@@ -74,9 +74,9 @@ if ($payCreate) {
         $query->bindParam(':externalReference', $externalReference);
         $query->execute();
         $paymentStatus = $query->fetch(PDO::FETCH_ASSOC)['status'];
-         if($paymentStatus == "processing"){
-                $paymentStatus = "Em Processamento";
-            }
+        if ($paymentStatus == "processing") {
+            $paymentStatus = "Em Processamento";
+        }
 
         echo "
         <link rel='stylesheet' type='text/css' href='style.css'>
@@ -120,4 +120,3 @@ if ($payCreate) {
         ";
     }
 }
-?>
