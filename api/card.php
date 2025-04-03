@@ -142,7 +142,7 @@ try {
                 <div class="input-content">
                     <div class="box-input">
                         <label>Número do cartão</label>
-                        <input autocomplete="off" type="text" id="cardNumber" name="cardNumber" maxlength="20"
+                        <input autocomplete="off" type="text" id="cardNumber" name="cardNumber" maxlength="19"
                             placeholder="1234 1234 1234 1234" data-checkout="cardNumber" style="word-spacing: 8px;"
                             oninput="updateCreditCardInfo();" onkeydown="handleNumber(event)">
 

@@ -4,6 +4,7 @@ const btnSubmit = document.querySelector('#input-submit')
 
 
 const inputNumber = document.querySelector('#cardNumber')
+// Usar querySelector com verificação de existência
 const inputNumberInfo = document.querySelector('#cardNumber + .info')
 const inputName = document.querySelector('#cardholderName')
 const inputNameInfo = document.querySelector('#cardholderName + .info')
@@ -11,6 +12,11 @@ const inputCvv = document.querySelector('#securityCode')
 const inputCvvInfo = document.querySelector('#securityCode + .info')
 const inputValidate = document.querySelector('#cardExpirationYear')
 const inputValidateInfo = document.querySelector('#cardExpirationYear + .info')
+
+// Verificar se os elementos existem antes de adicionar event listeners
+if (!inputNumber || !btnSubmit) {
+  console.error('Elementos essenciais do formulário não foram encontrados');
+}
 
 const cardViewName = document.querySelector('#card-user-name');
 const cardViewNumber = document.querySelector('#card-user-number');
@@ -27,22 +33,31 @@ inputNumber.onblur = (e) => {
 
 	if (value.length <= 0) {
 		const message = "Preenchimento obrigatório!"
-		inputNumberInfo.querySelector('.message').innerText = message
-		inputNumberInfo.classList.add('visible')
+		// Verificar se inputNumberInfo existe antes de acessá-lo
+		if (inputNumberInfo) {
+			inputNumberInfo.querySelector('.message').innerText = message
+			inputNumberInfo.classList.add('visible')
+		}
 		btnSubmit.classList.add('disable')
 		return false;
 	}
 
 	if (!/^[0-9]{16}$/.test(valueReplace)) {
 		const message = "Use apenas números, e verifique se estão completos!"
-		inputNumberInfo.querySelector('.message').innerText = message
-		inputNumberInfo.classList.add('visible')
+		// Verificar se inputNumberInfo existe antes de acessá-lo
+		if (inputNumberInfo) {
+			inputNumberInfo.querySelector('.message').innerText = message
+			inputNumberInfo.classList.add('visible')
+		}
 		btnSubmit.classList.add('disable')
 		return false;
 	}
 
-	inputNumberInfo.querySelector('.message').innerText = ''
-	inputNumberInfo.classList.remove('visible')
+	// Verificar se inputNumberInfo existe antes de acessá-lo
+	if (inputNumberInfo) {
+		inputNumberInfo.querySelector('.message').innerText = ''
+		inputNumberInfo.classList.remove('visible')
+	}
 
 	canSubmit();
 }
@@ -54,22 +69,31 @@ inputName.onblur = (e) => {
 
 	if (value.length <= 0) {
 		const message = "Preenchimento obrigatório!"
-		inputNameInfo.querySelector('.message').innerText = message
-		inputNameInfo.classList.add('visible')
+		// Verificar se inputNameInfo existe antes de acessá-lo
+		if (inputNameInfo) {
+			inputNameInfo.querySelector('.message').innerText = message
+			inputNameInfo.classList.add('visible')
+		}
 		btnSubmit.classList.add('disable')
 		return false;
 	}
 
 	if (!/^[a-z]+$/i.test(valueReplace)) {
 		const message = "Insira seu nome de forma correcta!"
-		inputNameInfo.querySelector('.message').innerText = message
-		inputNameInfo.classList.add('visible')
+		// Verificar se inputNameInfo existe antes de acessá-lo
+		if (inputNameInfo) {
+			inputNameInfo.querySelector('.message').innerText = message
+			inputNameInfo.classList.add('visible')
+		}
 		btnSubmit.classList.add('disable')
 		return false;
 	}
 
-	inputNameInfo.querySelector('.message').innerText = ''
-	inputNameInfo.classList.remove('visible')
+	// Verificar se inputNameInfo existe antes de acessá-lo
+	if (inputNameInfo) {
+		inputNameInfo.querySelector('.message').innerText = ''
+		inputNameInfo.classList.remove('visible')
+	}
 	canSubmit();
 }
 
@@ -80,22 +104,31 @@ inputValidate.onblur = (e) => {
 
 	if (value.length <= 0) {
 		const message = "Preenchimento obrigatório!"
-		inputValidateInfo.querySelector('.message').innerText = message
-		inputValidateInfo.classList.add('visible')
+		// Verificar se inputValidateInfo existe antes de acessá-lo
+		if (inputValidateInfo) {
+			inputValidateInfo.querySelector('.message').innerText = message
+			inputValidateInfo.classList.add('visible')
+		}
 		btnSubmit.classList.add('disable')
 		return false;
 	}
 
 	if (!/^[0-9]{2}\/[0-9]{4}/i.test(valueReplace)) {
 		const message = `Use o padrão "mês/ano"`
-		inputValidateInfo.querySelector('.message').innerText = message
-		inputValidateInfo.classList.add('visible')
+		// Verificar se inputValidateInfo existe antes de acessá-lo
+		if (inputValidateInfo) {
+			inputValidateInfo.querySelector('.message').innerText = message
+			inputValidateInfo.classList.add('visible')
+		}
 		btnSubmit.classList.add('disable')
 		return false;
 	}
 
-	inputValidateInfo.querySelector('.message').innerText = ''
-	inputValidateInfo.classList.remove('visible')
+	// Verificar se inputValidateInfo existe antes de acessá-lo
+	if (inputValidateInfo) {
+		inputValidateInfo.querySelector('.message').innerText = ''
+		inputValidateInfo.classList.remove('visible')
+	}
 	canSubmit();
 }
 
@@ -223,6 +256,20 @@ inputCvv.onblur = () => {
 	canSubmit();
 }
 
+// Adicionar event listeners para os handlers de input
+inputName.addEventListener('input', handleName);
+inputNumber.addEventListener('input', handleNumber);
+inputNumber.addEventListener('input', updateCreditCardInfo);
+inputCvv.addEventListener('input', handleCvv);
+
+// Adicionar validação ao botão de submissão
+btnSubmit.addEventListener('click', function(e) {
+	if (!canSubmit()) {
+		e.preventDefault();
+		alert('Por favor, verifique os dados do cartão antes de continuar.');
+	}
+});
+
 // Modificar função canSubmit para não validar em campos vazios inicialmente
 function canSubmit() {
 	try {
@@ -233,6 +280,12 @@ function canSubmit() {
 
 		// Se todos os campos estiverem vazios, não mostrar erro inicialmente
 		if (!cardNumber && !month && !year && !cvv) {
+			btnSubmit.classList.add('disable');
+			return false;
+		}
+
+		// Verificar se todos os campos necessários estão preenchidos
+		if (!cardNumber || !month || !year || !cvv) {
 			btnSubmit.classList.add('disable');
 			return false;
 		}
@@ -253,7 +306,7 @@ function canSubmit() {
 		btnSubmit.classList.remove('disable');
 		return true;
 	} catch (error) {
-		alert(error.message);
+		// Não mostrar alert aqui, apenas desabilitar o botão
 		btnSubmit.classList.add('disable');
 		return false;
 	}
@@ -262,9 +315,8 @@ function canSubmit() {
 function identifyCreditCard(creditCardNumber) {
 	const cardPatterns = {
 		'visa': /^4\d{12}(\d{3})?$/,
-		'mastercard': /^5[1-5]\d{14}$/,
+		'mastercard': /^(5[1-5]\d{14}|5[0-5]02[0-9]{8}|516292[0-9]{8}|522688[0-9]{8}|523421[0-9]{8})$/,
 		'amex': /^3[47]\d{13}$/,
-		'mastercard': /^(5[0-5]02[0-9]{8}|516292[0-9]{8}|522688[0-9]{8}|523421[0-9]{8})$/,
 		'hipercard': /^(606282\d{10}(\d{3})?)|(3841\d{15})$/,
 		'elo': /^4011(78|79)|^43(1274|8935)|^45(1416|7393|763(1|2))|^504175|^627780|^63(6297|6368|6369)|(65003[5-9]|65004[0-9]|65005[01])|(65040[5-9]|6504[1-3][0-9])|(65048[5-9]|65049[0-9]|6505[0-2][0-9]|65053[0-8])|(65054[1-9]|6505[5-8][0-9]|65059[0-8])|(65070[0-9]|65071[0-8])|(65072[0-7])|(65090[1-9]|6509[1-6][0-9]|65097[0-8])|(65165[2-9]|6516[67][0-9])|(65500[0-9]|65501[0-9])|(65502[1-9]|6550[34][0-9]|65505[0-8])|^(506699|5067[0-6][0-9]|50677[0-8])|^(509[0-8][0-9]{2}|5099[0-8][0-9]|50999[0-9])|^65003[1-3]|^(65003[5-9]|65004\d|65005[0-1])|^(65040[5-9]|6504[1-3]\d)|^(65048[5-9]|65049\d|6505[0-2]\d|65053[0-8])|^(65054[1-9]|6505[5-8]\d|65059[0-8])|^(65070\d|65071[0-8])|^65072[0-7]|^(65090[1-9]|65091\d|650920)|^(65165[2-9]|6516[6-7]\d)|^(65500\d|65501\d)|^(65502[1-9]|6550[3-4]\d|65505[0-8])/
 	};
@@ -283,8 +335,13 @@ function updateCreditCardInfo() {
 	let bandeira = identifyCreditCard(cardNumber);
 	let imagemBandeira = document.getElementById('imagemBandeira');
 
+	if (!imagemBandeira) {
+		// Se o elemento não existir, não tente manipulá-lo
+		return;
+	}
+
 	if (bandeira !== '') {
-		imagemBandeira.style.display = 'inline'; // 
+		imagemBandeira.style.display = 'inline'; 
 		switch (bandeira) {
 			case 'visa':
 				imagemBandeira.src = '../assets/visa.png';
@@ -307,11 +364,10 @@ function updateCreditCardInfo() {
 				imagemBandeira.alt = 'hipercard';
 				break;
 			default:
-
 				imagemBandeira.src = '';
 				imagemBandeira.alt = '';
 		}
-	} else {
+	} else if (imagemBandeira) {
 		imagemBandeira.style.display = 'none';
 		imagemBandeira.style.width = '50px';
 	}
