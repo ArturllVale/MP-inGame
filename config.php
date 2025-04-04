@@ -9,7 +9,7 @@ return [
     'db_user'                      => 'ragnarok',
     'db_password'                  => 'ragnarok',
     'db_name'                      => 'ragnarok',
-    'accesstoken'                   => 'ACCESS_TOKEN',                                  //SEU ACESS_TOKEN
+    'accesstoken'                   => 'ACCESS_TOKEN',                                  //SEU ACESS_TOKEN do MercadoPago
     'url_notification_api'          => 'https://exemple.com/mp/api/notification.php',
     'url_success'                   => 'https://exemple.com/success',                   //URL_PAGAMENTO_APROVADO
     'url_pending'                   => 'https://exemple.com/pending',                   //URL_PAGAMENTO_PENDENTE
